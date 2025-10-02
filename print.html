@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="print.css">
+  <title>Print Data Aset</title>
+</head>
+<body>
+  <h2>Data Aset Perusahaan</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Nama Aset</th>
+        <th>Kode Aset</th>
+        <th>Tag Aset</th>
+      </tr>
+    </thead>
+    <tbody id="tbodyData"></tbody>
+  </table>
+
+  <button onclick="window.print()">Print</button>
+
+  <script>
+    const tbody = document.getElementById('tbodyData');
+    const data = JSON.parse(localStorage.getItem('asetDataPrint')) || [];
+
+    if(data.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">Tidak ada data aset untuk dicetak</td></tr>';
+    } else {
+      data.forEach(aset => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${aset.nama}</td>
+          <td>${aset.kode}</td>
+          <td>${aset.tag}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+  </script>
+</body>
+</html>

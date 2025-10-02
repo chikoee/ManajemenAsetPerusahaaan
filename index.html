@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css">
+  <title>Manajemen Aset Perusahaan</title>
+</head>
+<body>
+  <header>Aset Perusahaan</header>
+
+  <section>
+    <form action="print.html" method="get">
+    <h2>Form Data Aset</h2>
+    <form id="formAset">
+      <label for="namaAset">Nama Aset</label>
+      <input type="text" id="namaAset" placeholder="Masukkan nama aset" required />
+      
+      <label for="kodeAset">Kode Aset</label>
+      <input type="text" id="kodeAset" placeholder="Masukkan kode aset" required />
+      
+      <label for="tagAset">Tag Aset</label>
+      <input type="text" id="tagAset" placeholder="Masukkan tag aset (pisah dengan koma)" required />
+      <div class="form-text">Contoh: Elektronik, Kantor</div>
+      
+      <button type="submit">Tambah Aset</button>
+    </form>
+  </section>
+
+  <section>
+    <h2>List Data Aset</h2>
+    <table id="tableAset">
+      <thead>
+        <tr>
+          <th>Nama Aset</th>
+          <th>Kode Aset</th>
+          <th>Tag Aset</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <button id="btnPrint">Print Data Aset</button>
+  </section>
+
+  <script>
+    const form = document.getElementById('formAset');
+    const tbody = document.querySelector('#tableAset tbody');
+    const btnPrint = document.getElementById('btnPrint');
+
+    let asetData = [];
+
+    function renderTable() {
+      tbody.innerHTML = '';
+      asetData.forEach((aset, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${aset.nama}</td>
+          <td>${aset.kode}</td>
+          <td>${aset.tag}</td>
+          <td><button class="btn-danger" onclick="hapusAset(${idx})">Hapus</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function hapusAset(idx) {
+      asetData.splice(idx, 1);
+      renderTable();
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nama = document.getElementById('namaAset').value.trim();
+      const kode = document.getElementById('kodeAset').value.trim();
+      const tag = document.getElementById('tagAset').value.trim();
+
+      if(nama && kode && tag) {
+        asetData.push({nama, kode, tag});
+        renderTable();
+        form.reset();
+      }
+    });
+
+    btnPrint.addEventListener('click', () => {
+      localStorage.setItem('asetDataPrint', JSON.stringify(asetData));
+      window.open('print.html', '_blank');
+    });
+
+    // Expose hapusAset ke global agar tombol bisa akses
+    window.hapusAset = hapusAset;
+  </script>
+</body>
+</html>
